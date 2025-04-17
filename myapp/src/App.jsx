@@ -19,6 +19,8 @@ const queryClient = new QueryClient({
   },
 });
 
+const boothId = 1;
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -31,7 +33,7 @@ function App() {
             <Route path="account" element={<Account />} />
             <Route path="booking" element={<Booking />} />
             <Route path="booths" element={<Booths />} />
-            <Route path="settings" element={<Settings />} />
+            <Route path="settings" element={<Settings boothId={boothId} />} />
             <Route path="users" element={<Users />} />
           </Route>
           <Route path="login" element={<Login />} />

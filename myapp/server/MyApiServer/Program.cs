@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MyApiServer.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(opt =>
         ?? builder.Configuration.GetConnectionString("MySqlConnection");
     opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
+
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings")
+);
+
 
 // 컨트롤러 등록
 builder.Services.AddControllers();
