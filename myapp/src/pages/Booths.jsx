@@ -2,7 +2,23 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-
+import Modal from "../ui/Modal";
+import Button from "../ui/Button";
+import { MdContentCopy } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
+import {
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  SubmitButton,
+  CancelButton,
+  ButtonGroup,
+  HiddenFileInput,
+  UploadLabel,
+} from "../ui/Form";
+import { confirmDelete } from "../services/ConfirmDelete";
 // Fetch booths from API
 const fetchBooths = async () => {
   const res = await fetch("http://localhost:5110/api/booth");
@@ -208,11 +224,19 @@ const Booths = () => {
                   />
                 </td>
                 <td>
-                  <button onClick={() => onCopyBooth(booth)}>Copy</button>
-                  <button onClick={() => onEdit(booth)}>Edit</button>
+                  <button onClick={() => onCopyBooth(booth)}>
+                    <MdContentCopy />
+                  </button>
+                  <button onClick={() => onEdit(booth)}>
+                    <FaRegEdit />
+                  </button>
 
-                  <button onClick={() => mutation.mutate(booth.id)}>
-                    Delete
+                  <button
+                    onClick={() =>
+                      confirmDelete(() => mutation.mutate(booth.id))
+                    }
+                  >
+                    <MdDeleteOutline />
                   </button>
                 </td>
               </tr>
@@ -223,55 +247,70 @@ const Booths = () => {
         <div>No booths available</div>
       )}
       {!isNewBooth && (
-        <button onClick={isNewBoothHandler}>Add New Booth</button>
+        <Button width="100%" onClick={isNewBoothHandler}>
+          Add New Booth
+        </Button>
       )}
 
       {isNewBooth && (
-        <div>
-          <h2>{editBooth ? "Edit Booth" : "Create New Booth"}</h2>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-              <label>Name:</label>
-              <input
-                {...register("name", { required: "Name is required" })}
-                placeholder="Enter booth name"
-              />
-              {errors.name && (
-                <p style={{ color: "red" }}>{errors.name.message}</p>
-              )}
-            </div>
+        <Modal isOpen={isNewBooth} onClose={() => setIsNewBooth(false)}>
+          <Modal.Header>
+            {editBooth ? "Edit Booth" : "Create New Booth"}
+          </Modal.Header>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Modal.Body>
+              <FormGroup>
+                <Label>Name:</Label>
+                <Input
+                  {...register("name", { required: "Name is required" })}
+                  placeholder="Enter booth name"
+                />
+                {errors.name && (
+                  <p style={{ color: "red" }}>{errors.name.message}</p>
+                )}
+              </FormGroup>
 
-            <div>
-              <label>Description:</label>
-              <input
-                {...register("descrpition", {
-                  required: "Description is required",
-                })}
-                placeholder="Enter description"
-              />
-              {errors.descrpition && (
-                <p style={{ color: "red" }}>{errors.descrpition.message}</p>
-              )}
-            </div>
+              <FormGroup>
+                <Label>Description:</Label>
+                <Input
+                  {...register("descrpition", {
+                    required: "Description is required",
+                  })}
+                  placeholder="Enter description"
+                />
+                {errors.descrpition && (
+                  <p style={{ color: "red" }}>{errors.descrpition.message}</p>
+                )}
+              </FormGroup>
 
-            <div>
-              <label>Image File Upload:</label>
-              <input type="file" onChange={onImageUpload} />
-            </div>
-            <div>
-              {/* <label>Image Address:</label> */}
-              <input hidden type="text" {...register("imageAddress")} />
-              {errors.imageAddress && (
-                <p style={{ color: "red" }}>{errors.imageAddress.message}</p>
-              )}
-            </div>
-
-            <button type="submit" disabled={isSubmitting}>
-              Submit
-            </button>
-            <button onClick={cancelHandler}>Cancel</button>
-          </form>
-        </div>
+              <FormGroup>
+                <UploadLabel htmlFor="fileUpload">
+                  Image File Upload
+                </UploadLabel>
+                <HiddenFileInput
+                  id="fileUpload"
+                  type="file"
+                  onChange={onImageUpload}
+                />
+              </FormGroup>
+              <FormGroup>
+                {/* <Label>Image Address:</Label> */}
+                <Input hidden type="text" {...register("imageAddress")} />
+                {errors.imageAddress && (
+                  <p style={{ color: "red" }}>{errors.imageAddress.message}</p>
+                )}
+              </FormGroup>
+            </Modal.Body>
+            <Modal.Footer>
+              <ButtonGroup>
+                <SubmitButton type="submit" disabled={isSubmitting}>
+                  Submit
+                </SubmitButton>
+                <CancelButton onClick={cancelHandler}>Cancel</CancelButton>
+              </ButtonGroup>
+            </Modal.Footer>
+          </Form>
+        </Modal>
       )}
     </div>
   );
