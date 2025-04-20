@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
+import { Container, Title, Table, Thead, Tr, Th, Td } from "../ui/Table";
 
 import {
   Form,
@@ -16,26 +17,9 @@ import {
   HiddenFileInput,
   UploadLabel,
 } from "../ui/Form";
-import { confirmDelete } from "../services/ConfirmDelete";
-import Action from "../ui/Action";
-// Fetch booths from API
-const fetchBooths = async () => {
-  const res = await fetch("http://localhost:5110/api/booth");
-  if (!res.ok) {
-    throw new Error("Failed to fetch booths");
-  }
-  return res.json();
-};
 
-// Delete booth from API
-// const deleteBooth = async (id) => {
-//   const res = await fetch(`http://localhost:5110/api/booth/${id}`, {
-//     method: "DELETE",
-//   });
-//   if (!res.ok) {
-//     throw new Error("Failed to delete booth");
-//   }
-// };
+import Action from "../ui/Action";
+import { fetchBooths } from "../services/BoothApi";
 
 const Booths = () => {
   const queryClient = useQueryClient();
@@ -55,45 +39,6 @@ const Booths = () => {
   } = useForm();
 
   const [editBooth, setEditBooth] = useState(null); // 수정할 Booth 저장
-
-  //   const onEdit = (booth) => {
-  //     if (editBooth && editBooth.id === booth.id) {
-  //       // 같은 booth를 다시 클릭하면 수정 취소
-  //       setEditBooth(null);
-  //       setIsNewBooth(false);
-  //       reset();
-  //     } else {
-  //       setEditBooth(booth);
-  //       setIsNewBooth(true);
-  //       reset(booth); // 폼에 booth 데이터 세팅
-  //     }
-  //   };
-
-  //   const onCopyBooth = async (booth) => {
-  //     try {
-  //       const copyData = {
-  //         name: booth.name + "_Copy",
-  //         descrpition: booth.descrpition,
-  //         imageAddress: booth.imageAddress,
-  //       };
-
-  //       const response = await fetch("http://localhost:5110/api/booth", {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify(copyData),
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error("Failed to copy Booth");
-  //       }
-
-  //       toast.success("Booth copied successfully!");
-  //       await queryClient.invalidateQueries({ queryKey: ["booths"] }); // 리스트 새로고침
-  //     } catch (error) {
-  //       toast.error(error.message);
-  //     }
-  //   };
-
   const [isNewBooth, setIsNewBooth] = useState(false);
   const isNewBoothHandler = () => {
     if (isNewBooth && !editBooth) {
@@ -116,16 +61,6 @@ const Booths = () => {
     setIsNewBooth(false);
     reset();
   };
-
-  // Delete mutation setup with useMutation
-  //   const mutation = useMutation({
-  //     mutationFn: deleteBooth,
-  //     onSuccess: async () => {
-  //       toast.success("Booth successfully deleted.");
-  //       await queryClient.invalidateQueries({ queryKey: ["booths"] }); // Refresh booths list after deletion
-  //     },
-  //     onError: (err) => toast.error(err.message),
-  //   });
 
   const onSubmit = async (data) => {
     try {
@@ -196,47 +131,33 @@ const Booths = () => {
   if (error) return <div>An error occurred: {error.message}</div>;
 
   return (
-    <div>
-      <h1>Booths List</h1>
+    <Container>
+      <Title>Booths List</Title>
       {data && data.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Image</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>No.</Th>
+              <Th>Name</Th>
+              <Th>Description</Th>
+              <Th>Image</Th>
+              <Th>Actions</Th>
+            </Tr>
+          </Thead>
           <tbody>
             {data.map((booth, index) => (
-              <tr key={booth.id}>
-                <td>{index + 1}</td>
-                <td>{booth.name}</td>
-                <td>{booth.descrpition}</td>
-                <td>
+              <Tr key={booth.id}>
+                <Td>{index + 1}</Td>
+                <Td>{booth.name}</Td>
+                <Td>{booth.descrpition}</Td>
+                <Td>
                   <img
                     src={booth.imageAddress}
                     alt={booth.name}
                     style={{ width: "100px", height: "auto" }}
                   />
-                </td>
-                <td>
-                  {/* <button onClick={() => onCopyBooth(booth)}>
-                    <MdContentCopy />
-                  </button>
-                  <button onClick={() => onEdit(booth)}>
-                    <FaRegEdit />
-                  </button>
-
-                  <button
-                    onClick={() =>
-                      confirmDelete(() => mutation.mutate(booth.id))
-                    }
-                  >
-                    <MdDeleteOutline />
-                  </button> */}
+                </Td>
+                <Td>
                   <Action
                     booth={booth}
                     setEditBooth={setEditBooth}
@@ -244,11 +165,11 @@ const Booths = () => {
                     reset={reset}
                     queryClient={queryClient}
                   />
-                </td>
-              </tr>
+                </Td>
+              </Tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       ) : (
         <div>No booths available</div>
       )}
@@ -318,7 +239,7 @@ const Booths = () => {
           </Form>
         </Modal>
       )}
-    </div>
+    </Container>
   );
 };
 

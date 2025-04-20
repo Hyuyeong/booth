@@ -1,58 +1,45 @@
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-// import 'dotenv/config';
+import { useQuery } from "@tanstack/react-query";
+import { fetchBookings } from "../services/BookingApi";
+import { Container, Title, Table, Thead, Tr, Th, Td } from "../ui/Table";
+
 function Booking() {
-    // const [data, setData] = useState([]);
+  const { data, isPending, error } = useQuery({
+    queryKey: ["bookings"],
+    queryFn: fetchBookings,
+  });
 
-    // const URL =process.env.DB_HOST+"/api/data"
+  if (isPending) return <div>Loading bookings...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
-
-    
-      const { data, error, isPending } = useQuery({
-        queryKey: ['posts'],
-        queryFn: async () => {
-          const response = await fetch('http://localhost:3001/api/data', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            credentials: 'include',  // Necessary if you want to send cookies
-          });
-          if (!response.ok) throw new Error('Failed to fetch data');
-          return response.json();
-        },
-      });
-      
-      console.log(data);
-
-
-    // useEffect(() => {
-    //     fetch("http://localhost:3001/api/data")
-    //       .then(res => res.json())
-    //       .then(data => {
-    //         setData(data);
-    //       })
-    //       .catch(err => console.error(err));
-
-    //   }, []);
-
-    //   console.log(data);
-      
-    return (
-        <div>
-          <h1>Posts</h1>
-          {/* Check if data is an array and has items */}
-          {data && Array.isArray(data) ? (
-            <ul>
-              {data.map((post) => (
-                <li key={post.id}>{post.Charge}</li>
-              ))}
-            </ul>
-          ) : (
-            <div>No data available</div>
-          )}
-        </div>
-      );
+  return (
+    <Container>
+      <Title>Booking List</Title>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>#</Th>
+            <Th>User</Th>
+            <Th>Booth</Th>
+            <Th>Status</Th>
+            <Th>Amount</Th>
+            <Th>Date</Th>
+          </Tr>
+        </Thead>
+        <tbody>
+          {data.map((booking) => (
+            <Tr key={booking.id}>
+              <Td>{booking.id}</Td>
+              <Td>{booking.userName}</Td>
+              <Td>{booking.boothName}</Td>
+              <Td>{booking.status}</Td>
+              <Td>${booking.amount}</Td>
+              <Td>{new Date(booking.date).toLocaleDateString()}</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
+  );
 }
 
-export default Booking
+export default Booking;
