@@ -9,7 +9,7 @@ const StyledAppLayout = styled.div`
   grid-template-rows: auto 1fr;
   height: 100vh;
   main {
-    background-color: gray;
+    /* background-color: gray; */
     padding: 4rem 4.8rem 6.4rem;
   }
 `;

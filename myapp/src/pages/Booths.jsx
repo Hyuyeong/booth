@@ -4,9 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Modal from "../ui/Modal";
 import Button from "../ui/Button";
-import { MdContentCopy } from "react-icons/md";
-import { FaRegEdit } from "react-icons/fa";
-import { MdDeleteOutline } from "react-icons/md";
+
 import {
   Form,
   FormGroup,
@@ -19,6 +17,7 @@ import {
   UploadLabel,
 } from "../ui/Form";
 import { confirmDelete } from "../services/ConfirmDelete";
+import Action from "../ui/Action";
 // Fetch booths from API
 const fetchBooths = async () => {
   const res = await fetch("http://localhost:5110/api/booth");
@@ -29,14 +28,14 @@ const fetchBooths = async () => {
 };
 
 // Delete booth from API
-const deleteBooth = async (id) => {
-  const res = await fetch(`http://localhost:5110/api/booth/${id}`, {
-    method: "DELETE",
-  });
-  if (!res.ok) {
-    throw new Error("Failed to delete booth");
-  }
-};
+// const deleteBooth = async (id) => {
+//   const res = await fetch(`http://localhost:5110/api/booth/${id}`, {
+//     method: "DELETE",
+//   });
+//   if (!res.ok) {
+//     throw new Error("Failed to delete booth");
+//   }
+// };
 
 const Booths = () => {
   const queryClient = useQueryClient();
@@ -57,43 +56,43 @@ const Booths = () => {
 
   const [editBooth, setEditBooth] = useState(null); // 수정할 Booth 저장
 
-  const onEdit = (booth) => {
-    if (editBooth && editBooth.id === booth.id) {
-      // 같은 booth를 다시 클릭하면 수정 취소
-      setEditBooth(null);
-      setIsNewBooth(false);
-      reset();
-    } else {
-      setEditBooth(booth);
-      setIsNewBooth(true);
-      reset(booth); // 폼에 booth 데이터 세팅
-    }
-  };
+  //   const onEdit = (booth) => {
+  //     if (editBooth && editBooth.id === booth.id) {
+  //       // 같은 booth를 다시 클릭하면 수정 취소
+  //       setEditBooth(null);
+  //       setIsNewBooth(false);
+  //       reset();
+  //     } else {
+  //       setEditBooth(booth);
+  //       setIsNewBooth(true);
+  //       reset(booth); // 폼에 booth 데이터 세팅
+  //     }
+  //   };
 
-  const onCopyBooth = async (booth) => {
-    try {
-      const copyData = {
-        name: booth.name + "_Copy",
-        descrpition: booth.descrpition,
-        imageAddress: booth.imageAddress,
-      };
+  //   const onCopyBooth = async (booth) => {
+  //     try {
+  //       const copyData = {
+  //         name: booth.name + "_Copy",
+  //         descrpition: booth.descrpition,
+  //         imageAddress: booth.imageAddress,
+  //       };
 
-      const response = await fetch("http://localhost:5110/api/booth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(copyData),
-      });
+  //       const response = await fetch("http://localhost:5110/api/booth", {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(copyData),
+  //       });
 
-      if (!response.ok) {
-        throw new Error("Failed to copy Booth");
-      }
+  //       if (!response.ok) {
+  //         throw new Error("Failed to copy Booth");
+  //       }
 
-      toast.success("Booth copied successfully!");
-      await queryClient.invalidateQueries({ queryKey: ["booths"] }); // 리스트 새로고침
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+  //       toast.success("Booth copied successfully!");
+  //       await queryClient.invalidateQueries({ queryKey: ["booths"] }); // 리스트 새로고침
+  //     } catch (error) {
+  //       toast.error(error.message);
+  //     }
+  //   };
 
   const [isNewBooth, setIsNewBooth] = useState(false);
   const isNewBoothHandler = () => {
@@ -119,14 +118,14 @@ const Booths = () => {
   };
 
   // Delete mutation setup with useMutation
-  const mutation = useMutation({
-    mutationFn: deleteBooth,
-    onSuccess: async () => {
-      toast.success("Booth successfully deleted.");
-      await queryClient.invalidateQueries({ queryKey: ["booths"] }); // Refresh booths list after deletion
-    },
-    onError: (err) => toast.error(err.message),
-  });
+  //   const mutation = useMutation({
+  //     mutationFn: deleteBooth,
+  //     onSuccess: async () => {
+  //       toast.success("Booth successfully deleted.");
+  //       await queryClient.invalidateQueries({ queryKey: ["booths"] }); // Refresh booths list after deletion
+  //     },
+  //     onError: (err) => toast.error(err.message),
+  //   });
 
   const onSubmit = async (data) => {
     try {
@@ -224,7 +223,7 @@ const Booths = () => {
                   />
                 </td>
                 <td>
-                  <button onClick={() => onCopyBooth(booth)}>
+                  {/* <button onClick={() => onCopyBooth(booth)}>
                     <MdContentCopy />
                   </button>
                   <button onClick={() => onEdit(booth)}>
@@ -237,7 +236,14 @@ const Booths = () => {
                     }
                   >
                     <MdDeleteOutline />
-                  </button>
+                  </button> */}
+                  <Action
+                    booth={booth}
+                    setEditBooth={setEditBooth}
+                    setIsNewBooth={setIsNewBooth}
+                    reset={reset}
+                    queryClient={queryClient}
+                  />
                 </td>
               </tr>
             ))}
