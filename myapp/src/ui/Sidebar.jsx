@@ -4,6 +4,7 @@ import { HiHome, HiCalendar, HiMiniUsers } from "react-icons/hi2";
 import { IoSettingsOutline } from "react-icons/io5";
 import { AiOutlineOpenAI } from "react-icons/ai";
 import { GiArchiveRegister } from "react-icons/gi";
+import { MdLogin } from "react-icons/md";
 
 const StyledSideBar = styled.div`
   /* background-color: blueviolet; */
@@ -42,6 +43,12 @@ function Sidebar() {
         <Link to="account">
           <GiArchiveRegister />
           <span>Register</span>
+        </Link>
+      </li>
+      <li>
+        <Link to="login">
+          <MdLogin />
+          <span>Login</span>
         </Link>
       </li>
       <li>
