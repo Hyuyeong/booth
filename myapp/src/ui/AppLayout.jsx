@@ -10,7 +10,8 @@ const StyledAppLayout = styled.div`
   height: 100vh;
   main {
     /* background-color: gray; */
-    padding: 4rem 4.8rem 6.4rem;
+    /* padding: 4rem 4.8rem 6.4rem; */
+    /* padding: 1rem; */
   }
 `;
 

@@ -9,7 +9,7 @@ export const Form = styled.form`
   border-radius: 1.2rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(8px);
-  max-width: 500px;
+  /* max-width: 500px; */
   margin: auto;
 `;
 
@@ -32,7 +32,7 @@ export const Input = styled.input`
   outline: none;
   font-size: 1rem;
   background: rgba(255, 255, 255, 0.1);
-  color: white;
+  color: black;
 
   &:focus {
     border: 2px solid #8b5cf6;

@@ -8,6 +8,7 @@ export const Title = styled.h2`
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 1rem;
+  text-transform: uppercase;
 `;
 
 export const Table = styled.table`
@@ -32,4 +33,5 @@ export const Th = styled.th`
 export const Td = styled.td`
   border: 1px solid #d1d5db;
   padding: 0.5rem;
+  text-align: ${(props) => props.align || "center"};
 `;

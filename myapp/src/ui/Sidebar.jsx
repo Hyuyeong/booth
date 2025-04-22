@@ -22,11 +22,15 @@ const StyledSideBar = styled.div`
   span {
     padding-left: 0.2rem;
   }
+  img {
+    max-width: 100px;
+  }
 `;
 
 function Sidebar() {
   return (
     <StyledSideBar>
+      <img src="/src/assets/logo.png" alt="logo" />
       <li>
         <Link to="/">
           <HiHome />

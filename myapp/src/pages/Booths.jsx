@@ -132,15 +132,15 @@ const Booths = () => {
 
   return (
     <Container>
-      <Title>Booths List</Title>
+      <Title>Booth List</Title>
       {data && data.length > 0 ? (
         <Table>
           <Thead>
             <Tr>
               <Th>No.</Th>
+              <Th>Image</Th>
               <Th>Name</Th>
               <Th>Description</Th>
-              <Th>Image</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
@@ -148,15 +148,15 @@ const Booths = () => {
             {data.map((booth, index) => (
               <Tr key={booth.id}>
                 <Td>{index + 1}</Td>
-                <Td>{booth.name}</Td>
-                <Td>{booth.descrpition}</Td>
                 <Td>
                   <img
                     src={booth.imageAddress}
                     alt={booth.name}
-                    style={{ width: "100px", height: "auto" }}
+                    style={{ width: "300px", height: "auto" }}
                   />
                 </Td>
+                <Td>{booth.name}</Td>
+                <Td align="left">{booth.descrpition}</Td>
                 <Td>
                   <Action
                     booth={booth}

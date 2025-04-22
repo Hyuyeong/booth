@@ -14,9 +14,19 @@ namespace MyApiServer.Controllers
             _context = context;
         }
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(int page = 1, int pageSize = 2)
         {
-            var data = _context.Users.ToList();
+            var totalCount = _context.Users.Count();
+            var items = _context.Users
+                       .Skip((page - 1) * pageSize)
+                       .Take(pageSize)
+                       .ToList();
+
+            var data = new
+            {
+                items = items,
+                totalCount = totalCount
+            };
             return Ok(data);
         }
 
