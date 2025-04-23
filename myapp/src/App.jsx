@@ -11,6 +11,9 @@ import AppLayout from "./ui/AppLayout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./ui/ProtectedRoute";
+import User from "./pages/User";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     quries: {
@@ -27,17 +30,31 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />}>
+          <Route
+            element={
+              <ProtectedRoute role="Admin">
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="account" element={<Account />} />
             <Route path="booking" element={<Booking />} />
             <Route path="booths" element={<Booths />} />
             <Route path="settings" element={<Settings boothId={boothId} />} />
             <Route path="users" element={<Users />} />
           </Route>
           <Route path="login" element={<Login />} />
+          <Route path="account" element={<Account />} />
           <Route path="*" element={<PageNotFound />} />
+          <Route
+            path="user"
+            element={
+              <ProtectedRoute role="User">
+                <User />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
       <Toaster

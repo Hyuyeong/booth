@@ -1,7 +1,8 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
+import { jwtDecode } from "jwt-decode";
 
 const Container = styled.div`
   padding: 2rem;
@@ -53,6 +54,20 @@ const Form = styled.form`
   gap: 0.8rem;
 `;
 
+const RegisterLink = styled.p`
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  a {
+    color: #0ea5e9;
+    text-decoration: none;
+    font-weight: bold;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
@@ -77,11 +92,23 @@ function Login() {
 
     if (res.ok) {
       const data = await res.json();
-      console.log(data);
+      const token = data.token;
 
       localStorage.setItem("token", data.token);
       toast.success("Login successful!");
-      setTimeout(() => navigate("/"), 1000);
+      // 🟡 JWT에서 role 추출
+      const decoded = jwtDecode(token);
+      const role = decoded["role"]?.toLowerCase();
+
+      setTimeout(() => {
+        if (role === "admin") {
+          navigate("/dashboard");
+        } else if (role === "user") {
+          navigate("/user");
+        } else {
+          navigate("/account"); // fallback
+        }
+      }, 1000);
     } else {
       const err = await res.text();
       toast.error(`Error: ${err}`);
@@ -108,6 +135,9 @@ function Login() {
         />
         <Button type="submit">Login</Button>
       </Form>
+      <RegisterLink>
+        Don’t have an account? <Link to="/account">Register</Link>
+      </RegisterLink>
     </Container>
   );
 }
