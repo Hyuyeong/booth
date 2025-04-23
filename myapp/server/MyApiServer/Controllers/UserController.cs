@@ -1,3 +1,4 @@
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -5,6 +6,7 @@ namespace MyApiServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    // [Authorize(Roles = "Admin")]
     public class UserController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -13,6 +15,7 @@ namespace MyApiServer.Controllers
         {
             _context = context;
         }
+        // [HttpGet("admin-only")]
         [HttpGet]
         public IActionResult Get(int page = 1, int pageSize = 2)
         {

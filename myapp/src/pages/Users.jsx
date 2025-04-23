@@ -1,16 +1,25 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-// import { fetchUsers } from "../services/UserApi";
+import { fetchUsers } from "../services/UserApi";
 import { Container, Title, Table, Thead, Tr, Th, Td } from "../ui/Table";
 import { useState, useEffect } from "react";
 
 const pageSize = 5;
-const fetchUsers = async (page) => {
-  const res = await fetch(
-    `http://localhost:5110/api/user?page=${page}&pageSize=${pageSize}`
-  );
-  if (!res.ok) throw new Error("Failed to fetch bookings");
-  return res.json();
-};
+// const fetchUsers = async (page) => {
+//   // const token = localStorage.getItem("token");
+
+//   const res = await fetch(
+//     `http://localhost:5110/api/user/admin-only?page=${page}&pageSize=${pageSize}`,
+//     {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "application/json",
+//       },
+//     }
+//   );
+
+//   if (!res.ok) throw new Error("Failed to fetch users");
+//   return res.json();
+// };
 
 function Users() {
   const [page, setPage] = useState(1);
