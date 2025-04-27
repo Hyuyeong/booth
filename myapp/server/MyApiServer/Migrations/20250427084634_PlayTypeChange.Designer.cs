@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MyApiServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250422091739_UserModel-r")]
-    partial class UserModelr
+    [Migration("20250427084634_PlayTypeChange")]
+    partial class PlayTypeChange
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,15 @@ namespace MyApiServer.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time(6)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -52,6 +61,8 @@ namespace MyApiServer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BoothId");
+
+                    b.HasIndex("PlayTypeId");
 
                     b.HasIndex("UserId");
 
@@ -69,11 +80,17 @@ namespace MyApiServer.Migrations
                     b.Property<string>("Descrpition")
                         .HasColumnType("longtext");
 
+                    b.Property<decimal>("HappyHourPrice")
+                        .HasColumnType("decimal(65,30)");
+
                     b.Property<string>("ImageAddress")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
 
@@ -107,6 +124,31 @@ namespace MyApiServer.Migrations
                     b.ToTable("BoothSettings");
                 });
 
+            modelBuilder.Entity("MyApiServer.Model.PlayType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descrpition")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("HappyHourPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayType");
+                });
+
             modelBuilder.Entity("MyApiServer.Model.User", b =>
                 {
                     b.Property<int>("Id")
@@ -120,6 +162,10 @@ namespace MyApiServer.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -140,6 +186,12 @@ namespace MyApiServer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MyApiServer.Model.PlayType", "PlayType")
+                        .WithMany()
+                        .HasForeignKey("PlayTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MyApiServer.Model.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -147,6 +199,8 @@ namespace MyApiServer.Migrations
                         .IsRequired();
 
                     b.Navigation("Booth");
+
+                    b.Navigation("PlayType");
 
                     b.Navigation("User");
                 });
